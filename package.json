@@ -1,0 +1,10 @@
+{
+  "name": "caps",
+  "description": "",
+  "version": "0.1.0",
+  "dependencies": {},
+  "devDependencies": {
+    "serverless-layers": "^2.2.4",
+    "serverless-python-requirements": "^5.1.0"
+  }
+}

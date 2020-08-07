@@ -1,0 +1,43 @@
+service: blog-sample
+
+plugins:
+  #- serverless-python-requirements
+  - serverless-layers
+custom:
+  serverless-layers:
+    - fastapi:
+        dependenciesPath: fastapi-layer/requirements.txt
+        layersDeploymentBucket: caps-dev-serverlessdeploymentbucket-1trm211njqgb0
+    - sql:
+        dependenciesPath: sql-layer/requirements.txt
+        layersDeploymentBucket: caps-dev-serverlessdeploymentbucket-1trm211njqgb0
+
+package:
+  exclude:
+    - '__pycache__*'
+    - '.git/*'
+    - 'node_modules/**'
+    - 'package*'
+
+provider:
+  name: aws
+  runtime: python3.6
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+
+
+functions:
+  api:
+    handler: main.handler
+    #layers: 
+    #- ${cf:layer-fastapi-${self:provider.stage}.PythonRequirementsLambdaLayerQualifiedArn}
+    events:
+        - http: ANY /
+        - http: 'ANY /{proxy+}'
+    vpc:
+      securityGroupIds:
+      - 'sg-05d0383ea5ff05b00'
+      subnetIds:
+      - 'subnet-08836d72bb90a9866'
+
+
